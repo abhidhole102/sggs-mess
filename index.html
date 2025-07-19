@@ -33,13 +33,22 @@
     <div class="menu" id="menu">Loading today's menu...</div>
 
     <script>
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec'; // Replace this with your actual Web App URL
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec'; // Your actual Web App URL
 
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                const today = new Date().toISOString().split('T')[0];
-                const todayMenu = data.find(item => item.date === today);
+                // Fix for Indian Timezone (UTC+5:30)
+                const utcNow = new Date();
+                const indiaNow = new Date(utcNow.getTime() + (5.5 * 60 * 60 * 1000));
+                const today = indiaNow.toISOString().split('T')[0];
+
+                const todayMenu = data.find(item => {
+                    const itemDate = new Date(item.date);
+                    const itemIndiaDate = new Date(itemDate.getTime() + (5.5 * 60 * 60 * 1000));
+                    return itemIndiaDate.toISOString().split('T')[0] === today;
+                });
+
                 const menuDiv = document.getElementById('menu');
 
                 if (todayMenu) {
@@ -61,3 +70,4 @@
 
 </body>
 </html>
+
