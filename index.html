@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SGGS Mess Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .menu {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .menu-item {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SGGS Mess Today's Menu</h1>
+    <div class="menu" id="menu">Loading today's menu...</div>
+
+    <script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec'; // Replace this with your actual Web App URL
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const today = new Date().toISOString().split('T')[0];
+                const todayMenu = data.find(item => item.date === today);
+                const menuDiv = document.getElementById('menu');
+
+                if (todayMenu) {
+                    menuDiv.innerHTML = `
+                        <div class="menu-item"><strong>Breakfast:</strong> ${todayMenu.breakfast}</div>
+                        <div class="menu-item"><strong>Lunch:</strong> ${todayMenu.lunch}</div>
+                        <div class="menu-item"><strong>Snacks:</strong> ${todayMenu.snacks}</div>
+                        <div class="menu-item"><strong>Dinner:</strong> ${todayMenu.dinner}</div>
+                    `;
+                } else {
+                    menuDiv.innerHTML = 'Menu for today is not yet updated.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('menu').innerText = 'Failed to load menu.';
+                console.error(error);
+            });
+    </script>
+
+</body>
+</html>
