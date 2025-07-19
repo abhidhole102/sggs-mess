@@ -2,43 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SGGS Mess Menu</title>
+    <title>HOSTEL MESS</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
             color: #333;
         }
-        .menu {
-            max-width: 400px;
-            margin: auto;
-            background: white;
+        header {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        h1 {
+            margin: 20px 0;
+            text-align: center;
+            color: #2c3e50;
+            font-size: 36px;
+        }
+        .menu-container {
+            max-width: 500px;
+            background-color: white;
+            margin: 20px auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: left;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .menu-title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #444;
         }
         .menu-item {
-            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-    <h1>SGGS Mess Today's Menu</h1>
-    <div class="menu" id="menu">Loading today's menu...</div>
+    <header>
+        <!-- Replace the background-image URL in CSS with your hostel photo later -->
+        HOSTEL MESS
+    </header>
+
+    <h1>Today's Menu</h1>
+
+    <div class="menu-container" id="menu">
+        Loading today's menu...
+    </div>
+
+    <footer>
+        &copy; 2025 SGGS Hostel Mess Committee
+    </footer>
 
     <script>
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec'; // Your actual Web App URL
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
 
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                // Fix for Indian Timezone (UTC+5:30)
                 const utcNow = new Date();
                 const indiaNow = new Date(utcNow.getTime() + (5.5 * 60 * 60 * 1000));
                 const today = indiaNow.toISOString().split('T')[0];
@@ -53,6 +98,7 @@
 
                 if (todayMenu) {
                     menuDiv.innerHTML = `
+                        <div class="menu-title">For ${today}</div>
                         <div class="menu-item"><strong>Breakfast:</strong> ${todayMenu.breakfast}</div>
                         <div class="menu-item"><strong>Lunch:</strong> ${todayMenu.lunch}</div>
                         <div class="menu-item"><strong>Snacks:</strong> ${todayMenu.snacks}</div>
@@ -70,4 +116,5 @@
 
 </body>
 </html>
+
 
