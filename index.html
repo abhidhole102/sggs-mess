@@ -3,117 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <title>HOSTEL MESS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #d0f0d0;
+            --accent-color: #4CAF50;
+            --text-color: #333;
+        }
+
         body {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #e6f4ea;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
         }
 
         header {
-            background: linear-gradient(135deg, #81c784, #66bb6a);
-            padding: 30px 0;
-            text-align: center;
+            width: 100%;
+            height: 150px;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            font-size: 2rem;
+            font-size: 36px;
             font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .container {
-            max-width: 700px;
-            margin: 20px auto;
-            padding: 20px;
+        h1 {
             text-align: center;
+            color: #333;
+            margin: 20px 0 10px 0;
         }
 
-        .menu-card {
-            background: #fff;
-            padding: 20px;
+        .menu-container {
+            max-width: 500px;
+            background-color: white;
             margin: 20px auto;
-            border-radius: 20px;
+            padding: 20px;
+            border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: 0.3s;
         }
 
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        .menu-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
-        h2 {
-            color: #388e3c;
+        .menu-title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
         }
 
-        .feedback-section {
-            padding: 40px 0;
-            background-color: #f9f9f9;
-            border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin: 20px;
+        .menu-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            transition: 0.3s;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background-color: #f8f8f8;
+            padding-left: 10px;
         }
 
         footer {
             text-align: center;
             padding: 20px;
-            font-size: 0.9rem;
-            color: #777;
+            background-color: #e8f5e9;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .menu-container {
+                width: 90%;
+                padding: 15px;
+            }
+            header {
+                font-size: 24px;
+                height: 120px;
+            }
         }
     </style>
 </head>
 <body>
 
-<header>HOSTEL MESS</header>
+    <header>
+        HOSTEL MESS
+    </header>
 
-<div class="container">
-    <p id="datetime"></p>
+    <p id="datetime" style="text-align:center; color: #4CAF50; font-weight: 500; margin: 10px 0;"></p>
 
-    <h2>Today's Menu</h2>
-    <div class="menu-card" id="menu">Loading today's menu...</div>
+    <h1>Today's Menu</h1>
 
-    <section class="feedback-section">
-        <h2>Student Feedback</h2>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfL_Kep9h4ShSXqBqlAsYF6HDuBqTg9akvYid3Rg2ABGve2Sg/viewform?embedded=true"
-            width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-    </section>
-</div>
+    <div class="menu-container" id="menu">
+        Loading today's menu...
+    </div>
 
-<footer>
-    &copy; 2025 SGGS Hostel Mess. All rights reserved.
-</footer>
+    <h2 style="text-align:center; color: #4CAF50; margin-top: 50px;">Student Feedback</h2>
 
-<script>
-    document.getElementById("datetime").innerText = new Date().toLocaleString();
+    <div style="display: flex; justify-content: center; padding: 20px;">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfL_Kep9h4ShSXqBqlAsYF6HDuBqTg9akvYid3Rg2ABGve2Sg/viewform?embedded=true" width="640" height="719" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
 
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
+    <footer>
+        &copy; 2025 SGGS Hostel Mess Committee | Contact: hostel@sggs.ac.in
+    </footer>
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const today = new Date().toISOString().split('T')[0];
-            const todayMenu = data.find(item => item.date === today);
-            const menuDiv = document.getElementById('menu');
+    <script>
+        setInterval(() => {
+            document.getElementById('datetime').innerText = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        }, 1000);
 
-            if (todayMenu) {
-                menuDiv.innerHTML = `
-                    <div><strong>Breakfast:</strong> ${todayMenu.breakfast}</div>
-                    <div><strong>Lunch:</strong> ${todayMenu.lunch}</div>
-                    <div><strong>Snacks:</strong> ${todayMenu.snacks}</div>
-                    <div><strong>Dinner:</strong> ${todayMenu.dinner}</div>
-                `;
-            } else {
-                menuDiv.innerHTML = 'Menu for today is not yet updated.';
-            }
-        })
-        .catch(error => {
-            document.getElementById('menu').innerText = 'Failed to load menu.';
-            console.error(error);
-        });
-</script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const utcNow = new Date();
+                const indiaNow = new Date(utcNow.getTime() + (5.5 * 60 * 60 * 1000));
+                const today = indiaNow.toISOString().split('T')[0];
+
+                const todayMenu = data.find(item => {
+                    const itemDate = new Date(item.date);
+                    const itemIndiaDate = new Date(itemDate.getTime() + (5.5 * 60 * 60 * 1000));
+                    return itemIndiaDate.toISOString().split('T')[0] === today;
+                });
+
+                const menuDiv = document.getElementById('menu');
+
+                if (todayMenu) {
+                    menuDiv.innerHTML = `
+                        <div class="menu-title">For ${today}</div>
+                        <div class="menu-item"><strong>Breakfast:</strong> ${todayMenu.breakfast}</div>
+                        <div class="menu-item"><strong>Lunch:</strong> ${todayMenu.lunch}</div>
+                        <div class="menu-item"><strong>Snacks:</strong> ${todayMenu.snacks}</div>
+                        <div class="menu-item"><strong>Dinner:</strong> ${todayMenu.dinner}</div>
+                    `;
+                } else {
+                    menuDiv.innerHTML = 'Menu for today is not yet updated.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('menu').innerText = 'Failed to load menu.';
+                console.error(error);
+            });
+    </script>
 
 </body>
 </html>
+
 
 
 
