@@ -5,8 +5,8 @@
     <title>HOSTEL MESS</title>
     <style>
         :root {
-            --primary-color: #d0f0d0; /* Faint green */
-            --accent-color: #4CAF50; /* Slightly stronger green */
+            --primary-color: #d0f0d0;
+            --accent-color: #4CAF50;
             --text-color: #333;
         }
 
@@ -81,6 +81,17 @@
             font-size: 14px;
             color: #555;
         }
+
+        @media (max-width: 600px) {
+            .menu-container {
+                width: 90%;
+                padding: 15px;
+            }
+            header {
+                font-size: 24px;
+                height: 120px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -89,17 +100,29 @@
         HOSTEL MESS
     </header>
 
+    <p id="datetime" style="text-align:center; color: #4CAF50; font-weight: 500; margin: 10px 0;"></p>
+
     <h1>Today's Menu</h1>
 
     <div class="menu-container" id="menu">
         Loading today's menu...
     </div>
 
+    <h2 style="text-align:center; color: #4CAF50; margin-top: 50px;">Student Feedback</h2>
+
+    <div style="display: flex; justify-content: center; padding: 20px;">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfL_Kep9h4ShSXqBqlAsYF6HDuBqTg9akvYid3Rg2ABGve2Sg/viewform?embedded=true" width="640" height="719" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
+
     <footer>
-        &copy; 2025 SGGS Hostel Mess Committee
+        &copy; 2025 SGGS Hostel Mess Committee | Contact: hostel@sggs.ac.in
     </footer>
 
     <script>
+        setInterval(() => {
+            document.getElementById('datetime').innerText = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        }, 1000);
+
         const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
 
         fetch(apiUrl)
@@ -138,8 +161,5 @@
 </body>
 </html>
 
-
-</body>
-</html>
 
 
