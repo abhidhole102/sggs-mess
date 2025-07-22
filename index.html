@@ -4,35 +4,38 @@
     <meta charset="UTF-8">
     <title>HOSTEL MESS</title>
     <style>
+        :root {
+            --primary-color: #d0f0d0; /* Faint green */
+            --accent-color: #4CAF50; /* Slightly stronger green */
+            --text-color: #333;
+        }
+
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            background-color: var(--primary-color);
+            color: var(--text-color);
         }
-        header {
-    width: 100%;
-    height: 220px;
-    background-color: #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: url('sahyadri-hostel.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
-    color: black;
-    font-size: 36px;
-    font-weight: bold;
-}
 
+        header {
+            width: 100%;
+            height: 150px;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
         h1 {
-            margin: 20px 0;
             text-align: center;
-            color: #2c3e50;
-            font-size: 36px;
+            color: #333;
+            margin: 20px 0 10px 0;
         }
+
         .menu-container {
             max-width: 500px;
             background-color: white;
@@ -40,34 +43,49 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: 0.3s;
         }
+
+        .menu-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
         .menu-title {
             text-align: center;
             font-size: 22px;
             margin-bottom: 15px;
-            color: #444;
+            color: var(--accent-color);
         }
+
         .menu-item {
             padding: 10px 0;
             border-bottom: 1px solid #eee;
+            transition: 0.3s;
         }
+
         .menu-item:last-child {
             border-bottom: none;
         }
+
+        .menu-item:hover {
+            background-color: #f8f8f8;
+            padding-left: 10px;
+        }
+
         footer {
             text-align: center;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #e8f5e9;
             margin-top: 50px;
             font-size: 14px;
-            color: #666;
+            color: #555;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <!-- Replace the background-image URL in CSS with your hostel photo later -->
         HOSTEL MESS
     </header>
 
@@ -116,6 +134,10 @@
                 console.error(error);
             });
     </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
