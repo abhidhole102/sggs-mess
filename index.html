@@ -2,173 +2,847 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HOSTEL MESS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGGS Mess Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
         body {
-            margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #e6f4ea;
-            color: #333;
-            animation: fadeBody 1s ease;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        header {
-            background: linear-gradient(135deg, #81c784, #66bb6a);
-            padding: 30px 0;
-            text-align: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .container {
-            max-width: 700px;
-            margin: 20px auto;
-            padding: 20px;
-            text-align: center;
+        .food-item {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .food-item:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation: float 8s ease-in-out infinite, drift 20s linear infinite;
+            animation-delay: 0s;
+        }
+
+        .food-item:nth-child(2) {
+            top: 15%;
+            right: 8%;
+            animation: float 10s ease-in-out infinite, drift 25s linear infinite reverse;
+            animation-delay: 1s;
+        }
+
+        .food-item:nth-child(3) {
+            top: 40%;
+            left: 3%;
+            animation: float 9s ease-in-out infinite, drift 30s linear infinite;
+            animation-delay: 2s;
+        }
+
+        .food-item:nth-child(4) {
+            top: 65%;
+            right: 5%;
+            animation: float 11s ease-in-out infinite, drift 22s linear infinite reverse;
+            animation-delay: 3s;
+        }
+
+        .food-item:nth-child(5) {
+            top: 75%;
+            left: 8%;
+            animation: float 7s ease-in-out infinite, drift 28s linear infinite;
+            animation-delay: 4s;
+        }
+
+        .food-item:nth-child(6) {
+            top: 85%;
+            right: 15%;
+            animation: float 12s ease-in-out infinite, drift 18s linear infinite reverse;
+            animation-delay: 5s;
+        }
+
+        .food-item:nth-child(7) {
+            top: 30%;
+            right: 25%;
+            animation: float 9s ease-in-out infinite, drift 35s linear infinite;
+            animation-delay: 6s;
+        }
+
+        .food-item:nth-child(8) {
+            top: 55%;
+            left: 15%;
+            animation: float 10s ease-in-out infinite, drift 24s linear infinite reverse;
+            animation-delay: 7s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1); 
+                opacity: 0.1;
+            }
+            25% {
+                transform: translateY(-20px) rotate(3deg) scale(1.1);
+                opacity: 0.15;
+            }
+            50% { 
+                transform: translateY(-30px) rotate(-2deg) scale(1.05); 
+                opacity: 0.2;
+            }
+            75% {
+                transform: translateY(-15px) rotate(4deg) scale(1.08);
+                opacity: 0.12;
+            }
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0px); }
+            25% { transform: translateX(20px); }
+            50% { transform: translateX(-10px); }
+            75% { transform: translateX(15px); }
+            100% { transform: translateX(0px); }
         }
 
         .menu-card {
-    background: linear-gradient(135deg, #ffffff, #f0fff4);
-    padding: 30px;
-    margin: 30px auto;
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    transition: 0.4s;
-    max-width: 500px;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.menu-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-}
-
-.menu-card div {
-    padding: 15px 0;
-    font-size: 1.1rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.menu-card div:last-child {
-    border-bottom: none;
-}
-
-.menu-card strong {
-    color: #388e3c;
-}
-
-
-        h2 {
-            color: #388e3c;
-            transition: color 0.3s ease;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        h2:hover {
-            color: #2e7d32;
+        .menu-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
 
-        .feedback-section {
-            padding: 40px 0;
-            background-color: #f9f9f9;
-            border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin: 20px;
-            animation: fadeIn 1s ease-in-out;
+        .meal-item {
+            background: #ffffff;
+            color: #1e293b;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 10px 0;
+            transform: translateX(-100px);
+            opacity: 0;
+            animation: slideIn 0.6s ease forwards;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
-        iframe {
-            width: 100%;
-            max-width: 100%;
-            height: 700px;
+        .meal-item:nth-child(1) { 
+            animation-delay: 0.1s; 
+            border-left: 4px solid #f59e0b; 
+            background: linear-gradient(135deg, #fef3c7 0%, #ffffff 100%);
+        }
+        .meal-item:nth-child(2) { 
+            animation-delay: 0.2s; 
+            border-left: 4px solid #10b981; 
+            background: linear-gradient(135deg, #d1fae5 0%, #ffffff 100%);
+        }
+        .meal-item:nth-child(3) { 
+            animation-delay: 0.3s; 
+            border-left: 4px solid #8b5cf6; 
+            background: linear-gradient(135deg, #ede9fe 0%, #ffffff 100%);
+        }
+        .meal-item:nth-child(4) { 
+            animation-delay: 0.4s; 
+            border-left: 4px solid #3b82f6; 
+            background: linear-gradient(135deg, #dbeafe 0%, #ffffff 100%);
+        }
+
+        /* Unique hover effects for each meal */
+        .meal-item:nth-child(1):hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.1);
+            border-left-color: #d97706;
+            background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+        }
+
+        .meal-item:nth-child(2):hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3), 0 0 25px rgba(16, 185, 129, 0.1);
+            border-left-color: #059669;
+            background: linear-gradient(135deg, #d1fae5 0%, #f0fdf4 100%);
+        }
+
+        .meal-item:nth-child(3):hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 28px rgba(139, 92, 246, 0.3), 0 0 22px rgba(139, 92, 246, 0.1);
+            border-left-color: #7c3aed;
+            background: linear-gradient(135deg, #ede9fe 0%, #faf5ff 100%);
+            animation: gentleBounce 0.6s ease-out;
+        }
+
+        .meal-item:nth-child(4):hover {
+            transform: translateY(-5px) scale(1.015);
+            box-shadow: 0 14px 32px rgba(59, 130, 246, 0.3), 0 0 24px rgba(59, 130, 246, 0.1);
+            border-left-color: #2563eb;
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+        }
+
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(-3px) scale(1.03); }
+            50% { transform: translateY(-5px) scale(1.035); }
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .title {
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(30, 41, 59, 0.1);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .meal-icon {
+            font-size: 1.3rem;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+
+        .refresh-btn {
+            background: #3b82f6;
+            transition: all 0.3s ease;
             border: none;
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: #777;
-            margin-top: 50px;
-            background-color: #e6f4ea;
+        .refresh-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        @keyframes fadeBody {
-            0% {
-                opacity: 0;
-                transform: scale(0.98);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .date-display {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #1e293b;
+            font-weight: 600;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+        /* Calendar Styles */
+        .calendar-day {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .calendar-day:hover {
+            background: #f0fdf4;
+            transform: scale(1.1);
+        }
+
+        .calendar-day.today {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .calendar-day.selected {
+            background: #22c55e;
+            color: white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .calendar-day.other-month {
+            color: #d1d5db;
+        }
+
+        .calendar-day.has-menu {
+            position: relative;
+        }
+
+        .calendar-day.has-menu::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 6px;
+            height: 6px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .menu-card {
+                margin: 20px;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .meal-item {
+                padding: 15px;
+                margin: 10px 0;
             }
         }
     </style>
 </head>
-<body>
+<body class="relative">
+    <!-- Floating Background Food Items -->
+    <div class="floating-shapes">
+        <!-- Pizza Slice -->
+        <div class="food-item">
+            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                <path d="M20 80 L50 20 L80 80 Z" fill="#FFD700" stroke="#FF6B35" stroke-width="2"/>
+                <circle cx="35" cy="60" r="4" fill="#FF4444"/>
+                <circle cx="55" cy="55" r="3" fill="#44AA44"/>
+                <circle cx="45" cy="70" r="3" fill="#FF4444"/>
+                <path d="M20 80 L50 20 L80 80" fill="none" stroke="#FF6B35" stroke-width="3"/>
+            </svg>
+        </div>
+        
+        <!-- Burger -->
+        <div class="food-item">
+            <svg width="90" height="70" viewBox="0 0 100 80" fill="none">
+                <ellipse cx="50" cy="20" rx="40" ry="8" fill="#D2691E"/>
+                <rect x="15" y="25" width="70" height="8" fill="#228B22" rx="2"/>
+                <rect x="10" y="35" width="80" height="12" fill="#8B4513" rx="3"/>
+                <rect x="15" y="50" width="70" height="6" fill="#FFD700" rx="2"/>
+                <ellipse cx="50" cy="65" rx="45" ry="10" fill="#D2691E"/>
+            </svg>
+        </div>
+        
+        <!-- Rice Bowl -->
+        <div class="food-item">
+            <svg width="75" height="75" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="50" cy="80" rx="35" ry="15" fill="#8B4513"/>
+                <ellipse cx="50" cy="75" rx="35" ry="15" fill="#FFFFFF"/>
+                <circle cx="40" cy="70" r="2" fill="#FFD700"/>
+                <circle cx="55" cy="68" r="2" fill="#FFD700"/>
+                <circle cx="48" cy="75" r="1.5" fill="#FFD700"/>
+                <path d="M20 75 Q50 60 80 75" stroke="#DDD" stroke-width="1" fill="none"/>
+            </svg>
+        </div>
+        
+        <!-- Curry Pot -->
+        <div class="food-item">
+            <svg width="85" height="85" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="50" cy="85" rx="30" ry="10" fill="#4A4A4A"/>
+                <rect x="25" y="40" width="50" height="45" fill="#FF6B35" rx="5"/>
+                <ellipse cx="50" cy="40" rx="25" ry="8" fill="#FF8C42"/>
+                <rect x="20" y="35" width="8" height="15" fill="#4A4A4A" rx="4"/>
+                <rect x="72" y="35" width="8" height="15" fill="#4A4A4A" rx="4"/>
+                <path d="M35 50 Q50 45 65 50" stroke="#FFD700" stroke-width="2" fill="none"/>
+            </svg>
+        </div>
+        
+        <!-- Roti/Chapati -->
+        <div class="food-item">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="35" fill="#DEB887"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#CD853F" stroke-width="2"/>
+                <circle cx="40" cy="45" r="3" fill="#CD853F" opacity="0.6"/>
+                <circle cx="60" cy="55" r="2" fill="#CD853F" opacity="0.6"/>
+                <circle cx="50" cy="60" r="2.5" fill="#CD853F" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <!-- Dal Bowl -->
+        <div class="food-item">
+            <svg width="80" height="65" viewBox="0 0 100 80" fill="none">
+                <ellipse cx="50" cy="70" rx="40" ry="8" fill="#4A4A4A"/>
+                <ellipse cx="50" cy="65" rx="40" ry="8" fill="#FFD700"/>
+                <ellipse cx="50" cy="60" rx="35" ry="6" fill="#FFA500"/>
+                <circle cx="35" cy="58" r="1" fill="#FF6B35"/>
+                <circle cx="55" cy="60" r="1" fill="#FF6B35"/>
+                <circle cx="45" cy="62" r="0.8" fill="#FF6B35"/>
+            </svg>
+        </div>
+        
+        <!-- Samosa -->
+        <div class="food-item">
+            <svg width="75" height="75" viewBox="0 0 100 100" fill="none">
+                <path d="M30 70 L50 30 L70 70 Z" fill="#DEB887" stroke="#CD853F" stroke-width="2"/>
+                <path d="M35 60 L45 45 L55 60" fill="none" stroke="#8B4513" stroke-width="1"/>
+                <path d="M40 65 L50 50 L60 65" fill="none" stroke="#8B4513" stroke-width="1"/>
+                <circle cx="45" cy="55" r="1" fill="#228B22"/>
+                <circle cx="52" cy="58" r="0.8" fill="#FF6B35"/>
+            </svg>
+        </div>
+        
+        <!-- Tea Cup -->
+        <div class="food-item">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="45" cy="80" rx="25" ry="8" fill="#4A4A4A"/>
+                <rect x="25" y="45" width="40" height="35" fill="#8B4513" rx="5"/>
+                <ellipse cx="45" cy="45" rx="20" ry="6" fill="#D2691E"/>
+                <path d="M65 55 Q75 55 75 65 Q75 75 65 75" stroke="#4A4A4A" stroke-width="3" fill="none"/>
+                <path d="M35 50 Q45 48 55 50" stroke="#FFD700" stroke-width="1" fill="none" opacity="0.7"/>
+            </svg>
+        </div>
+    </div>
 
-<header>HOSTEL MESS</header>
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+        <h1 class="title text-4xl md:text-5xl font-bold mb-8 text-center">
+            SGGS Mess Menu
+        </h1>
+        
+        <!-- Main Content Layout -->
+        <div class="flex flex-col lg:flex-row gap-6 max-w-6xl w-full">
+            <!-- Calendar Sidebar -->
+            <div class="lg:w-80 w-full">
+                <div class="menu-card rounded-2xl p-4 relative z-20">
+                    <div class="flex items-center justify-between mb-3">
+                        <button id="prevMonth" class="p-1 rounded-lg hover:bg-gray-100 transition-colors">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15,18 9,12 15,6"></polyline>
+                            </svg>
+                        </button>
+                        <h3 id="monthYear" class="text-sm font-semibold text-gray-800"></h3>
+                        <button id="nextMonth" class="p-1 rounded-lg hover:bg-gray-100 transition-colors">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9,18 15,12 9,6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-1 mb-2">
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">S</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">M</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">T</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">W</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">T</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">F</div>
+                        <div class="text-center text-xs font-medium text-gray-500 py-1">S</div>
+                    </div>
+                    
+                    <div id="calendarGrid" class="grid grid-cols-7 gap-1">
+                        <!-- Calendar dates will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <p class="text-xs text-gray-600">Selected:</p>
+                        <p id="selectedDate" class="text-xs font-medium text-green-600 mt-1"></p>
+                    </div>
+                </div>
+            </div>
 
-<div class="container">
-    <p id="datetime"></p>
+            <!-- Menu Section -->
+            <div class="flex-1">
+                <div class="menu-card rounded-2xl p-6 relative z-20">
+                    <div id="menu" class="text-center">
+                        <div class="loading mx-auto mb-4"></div>
+                        <p class="text-gray-600 font-medium">Loading today's delicious menu...</p>
+                    </div>
+                </div>
 
-    <h2>Today's Menu</h2>
-    <div class="menu-card" id="menu">Loading today's menu...</div>
+                <!-- Rating Section -->
+                <div class="menu-card rounded-2xl p-6 mt-6 relative z-20">
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Rate Today's Menu</h3>
+                        
+                        <div class="flex justify-center items-center mb-4">
+                            <div class="flex space-x-1" id="starRating">
+                                <span class="star text-3xl cursor-pointer transition-all duration-200 hover:scale-110" data-rating="1">⭐</span>
+                                <span class="star text-3xl cursor-pointer transition-all duration-200 hover:scale-110" data-rating="2">⭐</span>
+                                <span class="star text-3xl cursor-pointer transition-all duration-200 hover:scale-110" data-rating="3">⭐</span>
+                                <span class="star text-3xl cursor-pointer transition-all duration-200 hover:scale-110" data-rating="4">⭐</span>
+                                <span class="star text-3xl cursor-pointer transition-all duration-200 hover:scale-110" data-rating="5">⭐</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Average Rating</p>
+                            <div class="flex justify-center items-center">
+                                <span id="averageRating" class="text-2xl font-bold text-yellow-600">4.2</span>
+                                <span class="text-yellow-500 text-xl ml-1">⭐</span>
+                                <span id="totalRatings" class="text-sm text-gray-500 ml-2">(127 ratings)</span>
+                            </div>
+                        </div>
+                        
+                        <button id="submitRating" onclick="submitRating()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            Submit Rating
+                        </button>
+                        
+                        <div id="ratingMessage" class="mt-3 text-sm hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <section class="feedback-section">
-        <h2>Student Feedback</h2>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfL_Kep9h4ShSXqBqlAsYF6HDuBqTg9akvYid3Rg2ABGve2Sg/viewform?embedded=true"
-            loading="lazy">Loading…</iframe>
-    </section>
-</div>
+        <button onclick="refreshMenu()" class="refresh-btn mt-8 px-6 py-3 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+            Refresh Menu
+        </button>
+    </div>
 
-<footer>
-    © 2025 SGGS Hostel Mess | Hosted Free on <a href="https://pages.github.com/" target="_blank" style="color: #4CAF50; text-decoration: none;">GitHub Pages</a>
-</footer>
+    <script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
 
-<script>
-    document.getElementById("datetime").innerText = new Date().toLocaleString();
+        // Calendar variables
+        let currentDate = new Date();
+        let selectedDateObj = new Date();
+        let menuData = [];
 
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
+        // Month names
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const today = new Date().toISOString().split('T')[0];
-            const todayMenu = data.find(item => item.date === today);
+        // Initialize calendar
+        function initializeCalendar() {
+            updateCalendarDisplay();
+            updateSelectedDate();
+            
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendarDisplay();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendarDisplay();
+            });
+        }
+
+        function updateCalendarDisplay() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update month/year header
+            document.getElementById('monthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            // Get previous month's last few days
+            const prevMonth = new Date(year, month, 0);
+            const daysInPrevMonth = prevMonth.getDate();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // Add previous month's trailing days
+            for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+                const dayElement = createDayElement(daysInPrevMonth - i, true);
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Add current month's days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = createDayElement(day, false);
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Add next month's leading days
+            const totalCells = calendarGrid.children.length;
+            const remainingCells = 42 - totalCells; // 6 rows × 7 days
+            for (let day = 1; day <= remainingCells && totalCells < 42; day++) {
+                const dayElement = createDayElement(day, true);
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function createDayElement(day, isOtherMonth) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = day;
+            
+            if (isOtherMonth) {
+                dayElement.classList.add('other-month');
+            } else {
+                const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                const today = new Date();
+                
+                // Check if it's today
+                if (dayDate.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Check if it's selected
+                if (dayDate.toDateString() === selectedDateObj.toDateString()) {
+                    dayElement.classList.add('selected');
+                }
+                
+                // Check if there's menu data for this date
+                const dateString = dayDate.toISOString().split('T')[0];
+                if (menuData.some(item => {
+                    const itemDate = new Date(item.date);
+                    const itemIndiaDate = new Date(itemDate.getTime() + (5.5 * 60 * 60 * 1000));
+                    return itemIndiaDate.toISOString().split('T')[0] === dateString;
+                })) {
+                    dayElement.classList.add('has-menu');
+                }
+                
+                // Add click event
+                dayElement.addEventListener('click', () => {
+                    // Remove previous selection
+                    document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked day
+                    dayElement.classList.add('selected');
+                    
+                    // Update selected date
+                    selectedDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                    updateSelectedDate();
+                    loadMenuForDate(selectedDateObj);
+                });
+            }
+            
+            return dayElement;
+        }
+
+        function updateSelectedDate() {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('selectedDate').textContent = selectedDateObj.toLocaleDateString('en-IN', options);
+        }
+
+        function loadMenu() {
             const menuDiv = document.getElementById('menu');
+            menuDiv.innerHTML = `
+                <div class="loading mx-auto mb-4"></div>
+                <p class="text-gray-600 font-medium">Loading delicious menu...</p>
+            `;
 
-            if (todayMenu) {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    menuData = data;
+                    updateCalendarDisplay(); // Refresh calendar to show menu indicators
+                    loadMenuForDate(selectedDateObj);
+                })
+                .catch(error => {
+                    menuDiv.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="text-6xl mb-4">⚠️</div>
+                            <p class="text-red-600 font-medium text-lg">Failed to load menu</p>
+                            <p class="text-gray-500 text-sm mt-2">Please try refreshing the page</p>
+                        </div>
+                    `;
+                    console.error(error);
+                });
+        }
+
+        function loadMenuForDate(date) {
+            const menuDiv = document.getElementById('menu');
+            
+            // Convert selected date to India timezone for comparison
+            const selectedDateString = date.toISOString().split('T')[0];
+            
+            const selectedMenu = menuData.find(item => {
+                const itemDate = new Date(item.date);
+                const itemIndiaDate = new Date(itemDate.getTime() + (5.5 * 60 * 60 * 1000));
+                return itemIndiaDate.toISOString().split('T')[0] === selectedDateString;
+            });
+
+            if (selectedMenu) {
                 menuDiv.innerHTML = `
-                    <div><strong>Breakfast:</strong> ${todayMenu.breakfast}</div>
-                    <div><strong>Lunch:</strong> ${todayMenu.lunch}</div>
-                    <div><strong>Snacks:</strong> ${todayMenu.snacks}</div>
-                    <div><strong>Dinner:</strong> ${todayMenu.dinner}</div>
+                    <div class="meal-item">
+                        <div class="flex items-center mb-3">
+                            <span class="meal-icon">🌅</span>
+                            <h3 class="text-base font-semibold text-gray-800">Breakfast</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${selectedMenu.breakfast}</p>
+                    </div>
+                    <div class="meal-item">
+                        <div class="flex items-center mb-3">
+                            <span class="meal-icon">☀️</span>
+                            <h3 class="text-base font-semibold text-gray-800">Lunch</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${selectedMenu.lunch}</p>
+                    </div>
+                    <div class="meal-item">
+                        <div class="flex items-center mb-3">
+                            <span class="meal-icon">🍪</span>
+                            <h3 class="text-base font-semibold text-gray-800">Snacks</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${selectedMenu.snacks}</p>
+                    </div>
+                    <div class="meal-item">
+                        <div class="flex items-center mb-3">
+                            <span class="meal-icon">🌙</span>
+                            <h3 class="text-base font-semibold text-gray-800">Dinner</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">${selectedMenu.dinner}</p>
+                    </div>
                 `;
             } else {
-                menuDiv.innerHTML = 'Menu for today is not yet updated.';
+                const isToday = date.toDateString() === new Date().toDateString();
+                const isPast = date < new Date().setHours(0,0,0,0);
+                
+                menuDiv.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-4">${isPast ? '📅' : '🤔'}</div>
+                        <p class="text-gray-600 font-medium text-lg">
+                            ${isPast ? 'No menu data available for this past date.' : 
+                              isToday ? 'Menu for today is not yet updated.' : 
+                              'Menu for this date is not yet available.'}
+                        </p>
+                        <p class="text-gray-500 text-sm mt-2">
+                            ${isToday ? 'Please check back later!' : 'Try selecting a different date.'}
+                        </p>
+                    </div>
+                `;
             }
-        })
-        .catch(error => {
-            document.getElementById('menu').innerText = 'Failed to load menu.';
-            console.error(error);
-        });
-</script>
+        }
 
-</body>
+        function refreshMenu() {
+            loadMenu();
+        }
+
+        // Rating System
+        let selectedRating = 0;
+        let userHasRated = localStorage.getItem('userRatedToday') === new Date().toDateString();
+
+        function initializeRating() {
+            const stars = document.querySelectorAll('.star');
+            const submitButton = document.getElementById('submitRating');
+            
+            // Check if user already rated today
+            if (userHasRated) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Already Rated Today';
+                document.getElementById('ratingMessage').textContent = 'Thank you for your feedback!';
+                document.getElementById('ratingMessage').className = 'mt-3 text-sm text-green-600';
+                document.getElementById('ratingMessage').classList.remove('hidden');
+            }
+
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    if (!userHasRated) {
+                        selectedRating = index + 1;
+                        updateStarDisplay();
+                        submitButton.disabled = false;
+                    }
+                });
+
+                star.addEventListener('mouseenter', () => {
+                    if (!userHasRated) {
+                        highlightStars(index + 1);
+                    }
+                });
+            });
+
+            document.getElementById('starRating').addEventListener('mouseleave', () => {
+                if (!userHasRated) {
+                    updateStarDisplay();
+                }
+            });
+        }
+
+        function highlightStars(rating) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.filter = 'brightness(1.2) drop-shadow(0 0 8px #fbbf24)';
+                    star.style.transform = 'scale(1.1)';
+                } else {
+                    star.style.filter = 'brightness(0.6)';
+                    star.style.transform = 'scale(1)';
+                }
+            });
+        }
+
+        function updateStarDisplay() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.style.filter = 'brightness(1.2) drop-shadow(0 0 5px #fbbf24)';
+                    star.style.transform = 'scale(1.05)';
+                } else {
+                    star.style.filter = 'brightness(0.6)';
+                    star.style.transform = 'scale(1)';
+                }
+            });
+        }
+
+        function submitRating() {
+            if (selectedRating === 0) {
+                document.getElementById('ratingMessage').textContent = 'Please select a rating first!';
+                document.getElementById('ratingMessage').className = 'mt-3 text-sm text-red-600';
+                document.getElementById('ratingMessage').classList.remove('hidden');
+                return;
+            }
+
+            // Simulate rating submission
+            const currentAverage = parseFloat(document.getElementById('averageRating').textContent);
+            const currentTotal = parseInt(document.getElementById('totalRatings').textContent.match(/\d+/)[0]);
+            
+            // Calculate new average (simplified simulation)
+            const newTotal = currentTotal + 1;
+            const newAverage = ((currentAverage * currentTotal) + selectedRating) / newTotal;
+            
+            // Update display
+            document.getElementById('averageRating').textContent = newAverage.toFixed(1);
+            document.getElementById('totalRatings').textContent = `(${newTotal} ratings)`;
+            
+            // Mark as rated
+            localStorage.setItem('userRatedToday', new Date().toDateString());
+            userHasRated = true;
+            
+            // Update UI
+            document.getElementById('submitRating').disabled = true;
+            document.getElementById('submitRating').textContent = 'Rating Submitted!';
+            document.getElementById('ratingMessage').textContent = 'Thank you for your feedback!';
+            document.getElementById('ratingMessage').className = 'mt-3 text-sm text-green-600';
+            document.getElementById('ratingMessage').classList.remove('hidden');
+            
+            // Add success animation
+            const button = document.getElementById('submitRating');
+            button.style.background = '#10b981';
+            setTimeout(() => {
+                button.textContent = 'Already Rated Today';
+                button.style.background = '#6b7280';
+            }, 2000);
+        }
+
+        // Initialize everything
+        initializeCalendar();
+        loadMenu();
+        
+        // Initialize rating system after a short delay to ensure DOM is ready
+        setTimeout(initializeRating, 100);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'965aac5da0da595d',t:'MTc1MzYwMzk2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
