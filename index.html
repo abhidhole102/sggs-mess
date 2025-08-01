@@ -481,9 +481,9 @@
                         <div class="mb-4">
                             <p class="text-sm text-gray-600 mb-2">Average Rating</p>
                             <div class="flex justify-center items-center">
-                                <span id="averageRating" class="text-2xl font-bold text-yellow-600">4.2</span>
+                                <span id="averageRating" class="text-2xl font-bold text-yellow-600">...</span>
                                 <span class="text-yellow-500 text-xl ml-1">⭐</span>
-                                <span id="totalRatings" class="text-sm text-gray-500 ml-2">(127 ratings)</span>
+                                <span id="totalRatings" class="text-sm text-gray-500 ml-2"></span>
                             </div>
                         </div>
                         
@@ -503,7 +503,10 @@
     </div>
 
     <script>
+        // API URLs
         const apiUrl = 'https://script.google.com/macros/s/AKfycbzGtrN_D8u5y94rBg44hPd5RKTbO0BHryUL1dsKC76CPjqzUekNOCxnaX3cROTgjEA4cQ/exec';
+        // IMPORTANT: Replace this with your Google Apps Script URL for handling ratings
+        const ratingApiUrl = 'https://script.google.com/macros/s/YOUR_NEW_OR_MODIFIED_APP_SCRIPT_ID/exec'; 
 
         // Calendar variables
         let currentDate = new Date();
@@ -516,7 +519,15 @@
             "July", "August", "September", "October", "November", "December"
         ];
 
-        // Initialize calendar
+        // Rating variables
+        let selectedRating = 0;
+        let userHasRated = localStorage.getItem('userRatedToday') === new Date().toDateString();
+        let currentAverageRating = 0.0;
+        let currentTotalRatings = 0;
+
+        /**
+         * Initializes the calendar display and event listeners.
+         */
         function initializeCalendar() {
             updateCalendarDisplay();
             updateSelectedDate();
@@ -532,47 +543,50 @@
             });
         }
 
+        /**
+         * Updates the calendar grid to show the correct days for the current month.
+         */
         function updateCalendarDisplay() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            // Update month/year header
             document.getElementById('monthYear').textContent = `${monthNames[month]} ${year}`;
             
-            // Get first day of month and number of days
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const daysInMonth = lastDay.getDate();
             const startingDayOfWeek = firstDay.getDay();
             
-            // Get previous month's last few days
             const prevMonth = new Date(year, month, 0);
             const daysInPrevMonth = prevMonth.getDate();
             
             const calendarGrid = document.getElementById('calendarGrid');
             calendarGrid.innerHTML = '';
             
-            // Add previous month's trailing days
             for (let i = startingDayOfWeek - 1; i >= 0; i--) {
                 const dayElement = createDayElement(daysInPrevMonth - i, true);
                 calendarGrid.appendChild(dayElement);
             }
             
-            // Add current month's days
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayElement = createDayElement(day, false);
                 calendarGrid.appendChild(dayElement);
             }
             
-            // Add next month's leading days
             const totalCells = calendarGrid.children.length;
-            const remainingCells = 42 - totalCells; // 6 rows × 7 days
+            const remainingCells = 42 - totalCells;
             for (let day = 1; day <= remainingCells && totalCells < 42; day++) {
                 const dayElement = createDayElement(day, true);
                 calendarGrid.appendChild(dayElement);
             }
         }
 
+        /**
+         * Creates a single day element for the calendar.
+         * @param {number} day - The day of the month.
+         * @param {boolean} isOtherMonth - True if the day belongs to a different month.
+         * @returns {HTMLElement} The created day element.
+         */
         function createDayElement(day, isOtherMonth) {
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day';
@@ -584,17 +598,14 @@
                 const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
                 const today = new Date();
                 
-                // Check if it's today
                 if (dayDate.toDateString() === today.toDateString()) {
                     dayElement.classList.add('today');
                 }
                 
-                // Check if it's selected
                 if (dayDate.toDateString() === selectedDateObj.toDateString()) {
                     dayElement.classList.add('selected');
                 }
                 
-                // Check if there's menu data for this date
                 const dateString = dayDate.toISOString().split('T')[0];
                 if (menuData.some(item => {
                     const itemDate = new Date(item.date);
@@ -604,17 +615,13 @@
                     dayElement.classList.add('has-menu');
                 }
                 
-                // Add click event
                 dayElement.addEventListener('click', () => {
-                    // Remove previous selection
                     document.querySelectorAll('.calendar-day.selected').forEach(el => {
                         el.classList.remove('selected');
                     });
                     
-                    // Add selection to clicked day
                     dayElement.classList.add('selected');
                     
-                    // Update selected date
                     selectedDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
                     updateSelectedDate();
                     loadMenuForDate(selectedDateObj);
@@ -624,6 +631,9 @@
             return dayElement;
         }
 
+        /**
+         * Updates the display to show the currently selected date.
+         */
         function updateSelectedDate() {
             const options = { 
                 weekday: 'long', 
@@ -634,6 +644,9 @@
             document.getElementById('selectedDate').textContent = selectedDateObj.toLocaleDateString('en-IN', options);
         }
 
+        /**
+         * Fetches the full menu data and initializes the page.
+         */
         function loadMenu() {
             const menuDiv = document.getElementById('menu');
             menuDiv.innerHTML = `
@@ -660,10 +673,13 @@
                 });
         }
 
+        /**
+         * Loads the menu for a specific date and updates the UI.
+         * @param {Date} date - The date to load the menu for.
+         */
         function loadMenuForDate(date) {
             const menuDiv = document.getElementById('menu');
             
-            // Convert selected date to India timezone for comparison
             const selectedDateString = date.toISOString().split('T')[0];
             
             const selectedMenu = menuData.find(item => {
@@ -721,52 +737,145 @@
                     </div>
                 `;
             }
+            
+            // Now, also fetch ratings for this date
+            fetchRatingsForDate(date);
+            initializeRating(); // Re-initialize rating state on date change
         }
 
+        /**
+         * Re-fetches the full menu data from the API.
+         */
         function refreshMenu() {
             loadMenu();
         }
 
-        // Rating System
-        let selectedRating = 0;
-        let userHasRated = localStorage.getItem('userRatedToday') === new Date().toDateString();
 
+        // --- Rating System Functions ---
+
+        /**
+         * Updates the average and total rating display in the UI.
+         */
+        function updateRatingDisplay() {
+            const avgRatingEl = document.getElementById('averageRating');
+            const totalRatingsEl = document.getElementById('totalRatings');
+
+            if (currentAverageRating > 0) {
+                avgRatingEl.textContent = currentAverageRating.toFixed(1);
+                totalRatingsEl.textContent = `(${currentTotalRatings} ratings)`;
+            } else {
+                avgRatingEl.textContent = 'N/A';
+                totalRatingsEl.textContent = '(No ratings)';
+            }
+        }
+        
+        /**
+         * Fetches ratings for a specific date from the rating API.
+         * @param {Date} date - The date to fetch ratings for.
+         */
+        async function fetchRatingsForDate(date) {
+            const ratingSection = document.getElementById('starRating').closest('.menu-card');
+            const loadingSpinner = document.createElement('div');
+            loadingSpinner.className = 'loading mx-auto mb-4';
+            const loadingText = document.createElement('p');
+            loadingText.className = 'text-gray-600 font-medium';
+            loadingText.textContent = 'Fetching ratings...';
+
+            document.getElementById('averageRating').textContent = '...';
+            document.getElementById('totalRatings').textContent = '';
+            document.getElementById('ratingMessage').classList.add('hidden');
+            
+            // Add loading indicator if not already present
+            if (!ratingSection.querySelector('.loading')) {
+                ratingSection.prepend(loadingText);
+                ratingSection.prepend(loadingSpinner);
+            }
+
+            const dateParam = date.toISOString().split('T')[0];
+            try {
+                const response = await fetch(`${ratingApiUrl}?action=getRatings&date=${dateParam}`);
+                const data = await response.json();
+
+                if (data && typeof data.averageRating === 'number' && typeof data.totalRatings === 'number') {
+                    currentAverageRating = data.averageRating;
+                    currentTotalRatings = data.totalRatings;
+                } else {
+                    currentAverageRating = 0.0;
+                    currentTotalRatings = 0;
+                }
+            } catch (error) {
+                console.error('Error fetching ratings:', error);
+                document.getElementById('averageRating').textContent = 'N/A';
+                document.getElementById('totalRatings').textContent = '(Error)';
+                document.getElementById('ratingMessage').textContent = 'Could not fetch ratings.';
+                document.getElementById('ratingMessage').className = 'mt-3 text-sm text-red-600';
+                document.getElementById('ratingMessage').classList.remove('hidden');
+            } finally {
+                loadingSpinner.remove();
+                loadingText.remove();
+                updateRatingDisplay();
+                initializeRating(); // Re-initialize the rating UI after fetching new data
+            }
+        }
+
+        /**
+         * Initializes the star rating event listeners.
+         * It also checks if the user has already rated today.
+         */
         function initializeRating() {
             const stars = document.querySelectorAll('.star');
             const submitButton = document.getElementById('submitRating');
+            selectedRating = 0; // Reset selected rating
             
-            // Check if user already rated today
+            userHasRated = localStorage.getItem('userRatedToday') === new Date().toDateString();
+
             if (userHasRated) {
                 submitButton.disabled = true;
                 submitButton.textContent = 'Already Rated Today';
+                submitButton.style.background = '#6b7280';
                 document.getElementById('ratingMessage').textContent = 'Thank you for your feedback!';
                 document.getElementById('ratingMessage').className = 'mt-3 text-sm text-green-600';
                 document.getElementById('ratingMessage').classList.remove('hidden');
+            } else {
+                submitButton.disabled = true; // Disabled by default until a star is selected
+                submitButton.textContent = 'Submit Rating';
+                submitButton.style.background = '#f59e0b';
+                document.getElementById('ratingMessage').classList.add('hidden');
             }
 
             stars.forEach((star, index) => {
-                star.addEventListener('click', () => {
+                star.onclick = () => {
                     if (!userHasRated) {
                         selectedRating = index + 1;
                         updateStarDisplay();
                         submitButton.disabled = false;
                     }
-                });
+                };
 
-                star.addEventListener('mouseenter', () => {
+                star.onmouseenter = () => {
                     if (!userHasRated) {
                         highlightStars(index + 1);
                     }
-                });
+                };
+
+                // Remove previous click/hover state
+                star.style.filter = 'none';
+                star.style.transform = 'scale(1)';
             });
 
-            document.getElementById('starRating').addEventListener('mouseleave', () => {
+            document.getElementById('starRating').onmouseleave = () => {
                 if (!userHasRated) {
-                    updateStarDisplay();
+                    updateStarDisplay(); // Reset to selected rating or no rating
                 }
-            });
+            };
+            
+            updateStarDisplay(); // Initial display
         }
 
+        /**
+         * Highlights the stars based on the hover rating.
+         * @param {number} rating - The number of stars to highlight.
+         */
         function highlightStars(rating) {
             const stars = document.querySelectorAll('.star');
             stars.forEach((star, index) => {
@@ -779,7 +888,10 @@
                 }
             });
         }
-
+        
+        /**
+         * Updates the star display based on the user's current selected rating.
+         */
         function updateStarDisplay() {
             const stars = document.querySelectorAll('.star');
             stars.forEach((star, index) => {
@@ -793,54 +905,80 @@
             });
         }
 
-        function submitRating() {
+        /**
+         * Submits the user's rating to the API.
+         */
+        async function submitRating() {
             if (selectedRating === 0) {
+                // Using a custom message box instead of alert()
                 document.getElementById('ratingMessage').textContent = 'Please select a rating first!';
                 document.getElementById('ratingMessage').className = 'mt-3 text-sm text-red-600';
                 document.getElementById('ratingMessage').classList.remove('hidden');
                 return;
             }
 
-            // Simulate rating submission
-            const currentAverage = parseFloat(document.getElementById('averageRating').textContent);
-            const currentTotal = parseInt(document.getElementById('totalRatings').textContent.match(/\d+/)[0]);
-            
-            // Calculate new average (simplified simulation)
-            const newTotal = currentTotal + 1;
-            const newAverage = ((currentAverage * currentTotal) + selectedRating) / newTotal;
-            
-            // Update display
-            document.getElementById('averageRating').textContent = newAverage.toFixed(1);
-            document.getElementById('totalRatings').textContent = `(${newTotal} ratings)`;
-            
-            // Mark as rated
-            localStorage.setItem('userRatedToday', new Date().toDateString());
-            userHasRated = true;
-            
-            // Update UI
-            document.getElementById('submitRating').disabled = true;
-            document.getElementById('submitRating').textContent = 'Rating Submitted!';
-            document.getElementById('ratingMessage').textContent = 'Thank you for your feedback!';
-            document.getElementById('ratingMessage').className = 'mt-3 text-sm text-green-600';
-            document.getElementById('ratingMessage').classList.remove('hidden');
-            
-            // Add success animation
-            const button = document.getElementById('submitRating');
-            button.style.background = '#10b981';
-            setTimeout(() => {
-                button.textContent = 'Already Rated Today';
-                button.style.background = '#6b7280';
-            }, 2000);
+            const submitButton = document.getElementById('submitRating');
+            const ratingMessageDiv = document.getElementById('ratingMessage');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            ratingMessageDiv.textContent = 'Submitting your rating...';
+            ratingMessageDiv.className = 'mt-3 text-sm text-blue-600';
+            ratingMessageDiv.classList.remove('hidden');
+
+            const payload = {
+                action: 'submitRating',
+                date: selectedDateObj.toISOString().split('T')[0],
+                rating: selectedRating
+            };
+
+            try {
+                const response = await fetch(ratingApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    localStorage.setItem('userRatedToday', new Date().toDateString());
+                    userHasRated = true; 
+                    ratingMessageDiv.textContent = 'Rating submitted successfully! Thank you for your feedback.';
+                    ratingMessageDiv.className = 'mt-3 text-sm text-green-600';
+                    ratingMessageDiv.classList.remove('hidden');
+                    
+                    // Update displayed average and total ratings from API response
+                    currentAverageRating = data.newAverageRating;
+                    currentTotalRatings = data.newTotalRatings;
+                    updateRatingDisplay();
+                    
+                    // Final UI update
+                    submitButton.textContent = 'Already Rated Today';
+                    submitButton.style.background = '#6b7280';
+                } else {
+                    throw new Error(data.message || 'Failed to submit rating.');
+                }
+            } catch (error) {
+                console.error('Error submitting rating:', error);
+                ratingMessageDiv.textContent = `Error: ${error.message || 'Could not submit rating.'}`;
+                ratingMessageDiv.className = 'mt-3 text-sm text-red-600';
+                ratingMessageDiv.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Rating';
+            }
         }
 
         // Initialize everything
-        initializeCalendar();
-        loadMenu();
-        
-        // Initialize rating system after a short delay to ensure DOM is ready
-        setTimeout(initializeRating, 100);
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCalendar();
+            loadMenu();
+            // initializeRating and updateRatingDisplay are now called within loadMenuForDate and fetchRatingsForDate
+        });
+
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'965aac5da0da595d',t:'MTc1MzYwMzk2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
 
 
