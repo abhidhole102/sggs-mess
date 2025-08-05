@@ -494,9 +494,10 @@
 });
 
 function loadNotices() {
-  const apiUrl = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+  const apiUrl = "PASTE_YOUR_APPS_SCRIPT_URL_HERE"; 
 
   fetch(apiUrl)
+  
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("noticeList");
