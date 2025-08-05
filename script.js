@@ -493,4 +493,36 @@
     });
 });
 
+function loadNotices() {
+  const apiUrl = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("noticeList");
+      list.innerHTML = "";
+
+      if (data.length === 0) {
+        list.innerHTML = "<li>No current notices.</li>";
+        return;
+      }
+
+      data.forEach(notice => {
+        const li = document.createElement("li");
+        li.textContent = notice.text;
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("Notice fetch error:", err);
+      document.getElementById("noticeList").innerHTML = "<li>Failed to load notices.</li>";
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadNotices();
+});
+
+
+
 

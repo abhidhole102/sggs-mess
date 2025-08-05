@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,9 +105,30 @@
     </div>
 
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
-        <h1 class="title text-4xl md:text-5xl font-bold mb-8 text-center">
-            SGGS Mess Menu
-        </h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-8 text-center leading-tight tracking-tight bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 text-transparent bg-clip-text">
+  SGGS Mess Menu
+</h1>
+<!-- Mess Etiquette Note -->
+<div class="menu-card bg-red-100 border-l-4 border-red-500 text-red-800 p-4 rounded-lg shadow-sm mb-6 max-w-4xl mx-auto">
+  <h3 class="font-semibold text-lg mb-2">🚨 Note:</h3>
+  <ul class="list-disc ml-5 space-y-1 text-base">
+    <li>Please <strong>remove your shoes</strong> outside the mess area. 👞🚪</li>
+    <li><strong>Do not wash your hands</strong> using the drinking water tap. 🚱👐</li>
+    <li>Maintain cleanliness and discipline inside the mess. 🧹🍽️</li>
+    <li>Respect the mess staff and committee. 🙏</li>
+  </ul>
+</div>
+
+<!-- Notice Board Section -->
+<div class="menu-card bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow-sm mb-6 max-w-4xl mx-auto">
+  <h3 class="font-semibold text-lg mb-2">📢 Notice Board</h3>
+  <ul id="noticeList" class="list-disc ml-5 space-y-1 text-base">
+    <li>Loading notices...</li>
+  </ul>
+</div>
+
+
+
         
         <!-- Main Content Layout -->
         <div class="flex flex-col lg:flex-row gap-6 max-w-6xl w-full">
@@ -199,6 +221,9 @@
     </div>
 
     <script src="script.js"></script>
+    <!-- Dark Mode Toggle Button -->
+
+
 </body>
 <!-- Feedback Button -->
 <button id="openFeedback" class="fixed bottom-6 right-6 bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-full shadow-lg z-50">
@@ -207,7 +232,7 @@
 
 <!-- Feedback Modal -->
 <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl relative">
+  
     <!-- Close Button -->
     <button id="closeFeedback" class="absolute top-3 right-4 text-xl font-bold text-gray-700 hover:text-red-600">✕</button>
 
