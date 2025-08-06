@@ -544,8 +544,8 @@ document.getElementById('closeProfileModal').addEventListener('click', () => {
   document.getElementById('profileModal').classList.add('hidden');
 });
 // 🔁 Replace with your real values from Cloudinary
-const cloudName = "dou6yxpsu";       // ✅ Your cloud name
-const uploadPreset = "messupload";   // ✅ Your unsigned preset name
+const cloudName = "dou6yxpsu";
+const uploadPreset = "messupload";
 
 function uploadImage() {
   const file = document.getElementById("fileInput").files[0];
@@ -567,7 +567,8 @@ function uploadImage() {
       document.getElementById("uploadStatus").textContent = "Upload successful!";
       loadGallery();
     })
-    .catch(() => {
+    .catch((err) => {
+      console.error("Upload failed:", err);
       document.getElementById("uploadStatus").textContent = "Upload failed.";
     });
 }
