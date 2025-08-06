@@ -523,6 +523,17 @@ function loadNotices() {
 document.addEventListener("DOMContentLoaded", () => {
   loadNotices();
 });
+function openProfile(name, branch, imageUrl) {
+  document.getElementById('modalName').textContent = name;
+  document.getElementById('modalBranch').textContent = branch;
+  document.getElementById('modalImage').src = imageUrl;
+  document.getElementById('profileModal').classList.remove('hidden');
+}
+
+document.getElementById('closeProfileModal').addEventListener('click', () => {
+  document.getElementById('profileModal').classList.add('hidden');
+});
+
 
 
 

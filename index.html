@@ -236,17 +236,19 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10">
       
       <!-- Member Card Example -->
-      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-md hover:scale-105 transition">
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-md transform hover:scale-110 transition-transform duration-300">
+
         <img src="Abhijit pic linkeidn.jpg" alt="Abhijit" class="w-24 h-24 mx-auto rounded-full object-cover border-2 border-green-500 mb-3">
         <h3 class="font-semibold text-lg text-gray-800 dark:text-white">Abhijit Dhole</h3>
         <p class="text-sm text-gray-600 dark:text-gray-300">CSE</p>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-md hover:scale-105 transition">
-        <img src="Abhijit pic linkeidn.jpg" alt="Abhijit" class="w-24 h-24 mx-auto rounded-full object-cover border-2 border-green-500 mb-3">
-        <h3 class="font-semibold text-lg text-gray-800 dark:text-white">Abhijit Dhole</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-300">CSE</p>
-      </div>
+      <div onclick="openProfile('Abhijit Dhole', 'CSE', 'images/abhijit.jpg')" class="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-md hover:scale-105 cursor-pointer transition">
+  <img src="images/abhijit.jpg" alt="Abhijit" class="w-24 h-24 mx-auto rounded-full object-cover border-2 border-green-500 mb-3">
+  <h3 class="font-semibold text-lg text-gray-800 dark:text-white">Abhijit Dhole</h3>
+  <p class="text-sm text-gray-600 dark:text-gray-300">CSE</p>
+</div>
+
 
       <div class="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-md hover:scale-105 transition">
         <img src="Abhijit pic linkeidn.jpg" alt="Abhijit" class="w-24 h-24 mx-auto rounded-full object-cover border-2 border-green-500 mb-3">
@@ -330,6 +332,56 @@
 
   </div>
 </section>
+<!-- Profile Modal -->
+<div id="profileModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
+    <button id="closeProfileModal" class="absolute top-3 right-4 text-2xl text-gray-600 hover:text-red-500">✕</button>
+    <img id="modalImage" src="" class="w-32 h-32 mx-auto rounded-full mb-4 object-cover border-4 border-green-500">
+    <h3 id="modalName" class="text-xl font-bold text-center text-gray-800 dark:text-white"></h3>
+    <p id="modalBranch" class="text-center text-gray-600 dark:text-gray-300 mt-1"></p>
+  </div>
+</div>
+
+<!-- Footer Info Section -->
+<footer class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 py-4 mt-4">
+  <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+
+    <!-- About -->
+    <div>
+      <h3 class="text-lg font-semibold mb-2">🏠 About</h3>
+      <p class="text-sm">
+        SGGS Hostel Mess serves nutritious and hygienic food to hundreds of students daily. Managed by dedicated student committees and caring staff, we aim to create a homely food experience.
+      </p>
+    </div>
+
+    <!-- Contact -->
+    <div>
+      <!-- Hostel Email Section -->
+<h3 class="text-lg font-semibold mb-2">📧 Hostel Email</h3>
+<p class="text-sm">
+  For feedback, complaints or suggestions, reach us at:<br>
+  hostel@sggs.ac.in
+</p>
+
+    </div>
+
+    <!-- Mess Timings -->
+    <div>
+      <h3 class="text-lg font-semibold mb-4">🕒 Mess Timings</h3>
+      <ul class="text-sm space-y-1">
+        <li><strong>Breakfast:</strong> 7:30 AM – 9:00 AM</li>
+        <li><strong>Lunch:</strong> 11:30 AM – 2:00 PM</li>
+        <li><strong>Dinner:</strong> 7:30 PM – 10:00 PM</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
+    © 2025 SGGS Hostel Mess | Designed by Mess Committee
+  </div>
+</footer>
+
 
 
 
