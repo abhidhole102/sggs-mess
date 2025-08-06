@@ -543,8 +543,9 @@ function openProfile(name, branch, imageUrl) {
 document.getElementById('closeProfileModal').addEventListener('click', () => {
   document.getElementById('profileModal').classList.add('hidden');
 });
-const cloudName = "dou6yxpsu";       // e.g., "sggs-mess"
-const uploadPreset = "messupload"; // e.g., "messupload"
+// 🔁 Replace with your real values from Cloudinary
+const cloudName = "dou6yxpsu";       // ✅ Your cloud name
+const uploadPreset = "messupload";   // ✅ Your unsigned preset name
 
 function uploadImage() {
   const file = document.getElementById("fileInput").files[0];
@@ -564,7 +565,7 @@ function uploadImage() {
     .then((res) => res.json())
     .then((data) => {
       document.getElementById("uploadStatus").textContent = "Upload successful!";
-      loadGallery(); // refresh gallery after upload
+      loadGallery();
     })
     .catch(() => {
       document.getElementById("uploadStatus").textContent = "Upload failed.";
@@ -592,8 +593,3 @@ function loadGallery() {
 }
 
 window.onload = loadGallery;
-
-
-
-
-
