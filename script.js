@@ -533,6 +533,65 @@ function openProfile(name, branch, imageUrl) {
 document.getElementById('closeProfileModal').addEventListener('click', () => {
   document.getElementById('profileModal').classList.add('hidden');
 });
+function openProfile(name, branch, imageUrl) {
+  document.getElementById('modalName').textContent = name;
+  document.getElementById('modalBranch').textContent = branch;
+  document.getElementById('modalImage').src = imageUrl;
+  document.getElementById('profileModal').classList.remove('hidden');
+}
+
+document.getElementById('closeProfileModal').addEventListener('click', () => {
+  document.getElementById('profileModal').classList.add('hidden');
+});
+const cloudName = "dou6yxpsu";       // e.g., "sggs-mess"
+const uploadPreset = "messupload"; // e.g., "messupload"
+
+function uploadImage() {
+  const file = document.getElementById("fileInput").files[0];
+  if (!file) return;
+
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", uploadPreset);
+
+  document.getElementById("uploadStatus").textContent = "Uploading...";
+
+  fetch(url, {
+    method: "POST",
+    body: formData
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      document.getElementById("uploadStatus").textContent = "Upload successful!";
+      loadGallery(); // refresh gallery after upload
+    })
+    .catch(() => {
+      document.getElementById("uploadStatus").textContent = "Upload failed.";
+    });
+}
+
+function loadGallery() {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "Loading...";
+
+  fetch(`https://res.cloudinary.com/${cloudName}/image/list/mess-gallery.json`)
+    .then((res) => res.json())
+    .then((data) => {
+      gallery.innerHTML = "";
+      data.resources.reverse().slice(0, 8).forEach((image) => {
+        const img = document.createElement("img");
+        img.src = `https://res.cloudinary.com/${cloudName}/image/upload/w_500/${image.public_id}.jpg`;
+        img.className = "rounded-lg shadow-md hover:scale-105 transition-transform duration-200";
+        gallery.appendChild(img);
+      });
+    })
+    .catch(() => {
+      gallery.innerHTML = "<p class='text-sm text-red-600'>Failed to load gallery.</p>";
+    });
+}
+
+window.onload = loadGallery;
 
 
 
