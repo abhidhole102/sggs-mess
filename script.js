@@ -577,13 +577,17 @@ function loadGallery() {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "Loading...";
 
-  fetch(`https://res.cloudinary.com/${cloudName}/image/list/mess-gallery.json`)
+  fetch(`https://api.cloudinary.com/v1_1/dou6yxpsu/resources/image/upload?prefix=mess-gallery/&max_results=8`, {
+    headers: {
+      Authorization: "Basic " + btoa("dou6yxpsu" + ":") // no API secret needed
+    }
+  })
     .then((res) => res.json())
     .then((data) => {
       gallery.innerHTML = "";
-      data.resources.reverse().slice(0, 8).forEach((image) => {
+      data.resources.forEach((image) => {
         const img = document.createElement("img");
-        img.src = `https://res.cloudinary.com/${cloudName}/image/upload/w_500/${image.public_id}.jpg`;
+        img.src = image.secure_url;
         img.className = "rounded-lg shadow-md hover:scale-105 transition-transform duration-200";
         gallery.appendChild(img);
       });
@@ -593,4 +597,3 @@ function loadGallery() {
     });
 }
 
-window.onload = loadGallery;
