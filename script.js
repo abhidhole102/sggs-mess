@@ -543,16 +543,9 @@ function openProfile(name, branch, imageUrl) {
 document.getElementById('closeProfileModal').addEventListener('click', () => {
   document.getElementById('profileModal').classList.add('hidden');
 });
-// Add this at the top with your other API URLs
-const galleryApiUrl = 'YOUR_APPS_SCRIPT_URL'; // Same as your apiUrl
 
 // Upload functionality
-document.getElementById('foodPhoto').addEventListener('change', function(e) {
-  const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
-  document.getElementById('fileName').textContent = fileName;
-});
-
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
   const fileInput = document.getElementById('foodPhoto');
@@ -565,54 +558,61 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     return;
   }
   
-  const file = fileInput.files[0];
-  const reader = new FileReader();
-  
   statusEl.textContent = 'Uploading...';
   statusEl.className = 'text-sm text-center mt-2 text-blue-600';
-  
-  reader.onload = function(e) {
-    const imageData = e.target.result.split(',')[1];
+
+  try {
+    const file = fileInput.files[0];
+    const imageData = await readFileAsBase64(file);
     
-    fetch(galleryApiUrl, {
+    const response = await fetch(galleryApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         action: 'uploadFoodPhoto',
-        image: imageData,
+        image: imageData.split(',')[1], // Remove data URL prefix
         mimeType: file.type,
         filename: file.name,
         dishName: dishName,
         date: new Date().toISOString().split('T')[0]
       })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        statusEl.textContent = 'Upload successful!';
-        statusEl.className = 'text-sm text-center mt-2 text-green-600';
-        fileInput.value = '';
-        document.getElementById('fileName').textContent = 'No file selected';
-        document.getElementById('dishName').value = '';
-        loadFoodGallery();
-      } else {
-        throw new Error(data.error || 'Upload failed');
-      }
-    })
-    .catch(error => {
-      console.error('Upload error:', error);
-      statusEl.textContent = 'Error: ' + error.message;
-      statusEl.className = 'text-sm text-center mt-2 text-red-600';
     });
-  };
-  
-  reader.readAsDataURL(file);
+
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      statusEl.textContent = 'Upload successful!';
+      statusEl.className = 'text-sm text-center mt-2 text-green-600';
+      fileInput.value = '';
+      document.getElementById('fileName').textContent = 'No file selected';
+      document.getElementById('dishName').value = '';
+      loadFoodGallery();
+    } else {
+      throw new Error(data.error || 'Upload failed');
+    }
+  } catch (error) {
+    console.error('Upload error:', error);
+    statusEl.textContent = `Error: ${error.message}`;
+    statusEl.className = 'text-sm text-center mt-2 text-red-600';
+  }
 });
 
+// Helper function to read file as base64
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 // Gallery functionality
-function loadFoodGallery() {
+async function loadFoodGallery() {
   const galleryEl = document.getElementById('foodGallery');
   
   galleryEl.innerHTML = `
@@ -622,45 +622,57 @@ function loadFoodGallery() {
     </div>
   `;
   
-  fetch(`${galleryApiUrl}?action=getFoodPhotos`)
-    .then(response => response.json())
-    .then(photos => {
-      if (photos.length === 0) {
-        galleryEl.innerHTML = `
-          <div class="col-span-full text-center py-8">
-            <p class="text-gray-600">No photos yet. Be the first to upload!</p>
-          </div>
-        `;
-        return;
-      }
-      
-      galleryEl.innerHTML = '';
-      
-      photos.forEach(photo => {
-        const photoCard = document.createElement('div');
-        photoCard.className = 'menu-card rounded-xl overflow-hidden hover:shadow-lg transition-shadow';
-        photoCard.innerHTML = `
-          <img src="${photo.url}" alt="${photo.dishName}" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="font-semibold text-gray-800 dark:text-white truncate">${photo.dishName}</h3>
-            <p class="text-xs text-gray-500 mt-1">Uploaded by ${photo.uploader}</p>
-            <p class="text-xs text-gray-400 mt-1">${new Date(photo.date).toLocaleDateString('en-IN')}</p>
-          </div>
-        `;
-        galleryEl.appendChild(photoCard);
-      });
-    })
-    .catch(error => {
-      console.error('Gallery load error:', error);
+  try {
+    const response = await fetch(`${galleryApiUrl}?action=getFoodPhotos`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    
+    const photos = await response.json();
+    
+    if (!photos || !photos.length) {
       galleryEl.innerHTML = `
         <div class="col-span-full text-center py-8">
-          <p class="text-red-600">Failed to load gallery. Please try again later.</p>
+          <p class="text-gray-600">No photos yet. Be the first to upload!</p>
+          <img src="https://cdn.pixabay.com/photo/2017/06/06/22/46/mediterranean-cuisine-2378758_640.jpg" 
+               class="mx-auto mt-4 w-48 opacity-50 rounded-lg">
         </div>
       `;
+      return;
+    }
+    
+    galleryEl.innerHTML = '';
+    
+    photos.forEach(photo => {
+      const photoCard = document.createElement('div');
+      photoCard.className = 'menu-card rounded-xl overflow-hidden hover:shadow-lg transition-shadow';
+      photoCard.innerHTML = `
+        <div class="relative h-48 overflow-hidden">
+          <img src="${photo.url}" alt="${photo.dishName}" 
+               class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+        </div>
+        <div class="p-4">
+          <h3 class="font-semibold text-gray-800 dark:text-white truncate">${photo.dishName}</h3>
+          <p class="text-xs text-gray-500 mt-1">Uploaded by ${photo.uploader.split('@')[0]}</p>
+          <p class="text-xs text-gray-400 mt-1">${formatDate(photo.date)}</p>
+        </div>
+      `;
+      galleryEl.appendChild(photoCard);
     });
+    
+  } catch (error) {
+    console.error('Gallery load error:', error);
+    galleryEl.innerHTML = `
+      <div class="col-span-full text-center py-8">
+        <p class="text-red-600">Failed to load gallery. Please try again later.</p>
+        <button onclick="loadFoodGallery()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Retry
+        </button>
+      </div>
+    `;
+  }
 }
 
-// Initialize gallery on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadFoodGallery();
-});
+// Helper function to format date
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('en-IN', options);
+}
