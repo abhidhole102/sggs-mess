@@ -305,4 +305,48 @@
                 margin: 10px 0;
             }
         }
+        /* Gallery Styles */
+#foodGallery {
+  min-height: 300px;
+}
+
+.gallery-card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.gallery-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-card img {
+  transition: transform 0.5s ease;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Upload Form Styles */
+#uploadForm input[type="text"] {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+#uploadForm input[type="text"]:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
     

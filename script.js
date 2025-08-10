@@ -543,57 +543,124 @@ function openProfile(name, branch, imageUrl) {
 document.getElementById('closeProfileModal').addEventListener('click', () => {
   document.getElementById('profileModal').classList.add('hidden');
 });
-// 🔁 Replace with your real values from Cloudinary
-const cloudName = "dou6yxpsu";
-const uploadPreset = "messupload";
+// Add this at the top with your other API URLs
+const galleryApiUrl = 'YOUR_APPS_SCRIPT_URL'; // Same as your apiUrl
 
-function uploadImage() {
-  const file = document.getElementById("fileInput").files[0];
-  if (!file) return;
+// Upload functionality
+document.getElementById('foodPhoto').addEventListener('change', function(e) {
+  const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
+  document.getElementById('fileName').textContent = fileName;
+});
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", uploadPreset);
-
-  document.getElementById("uploadStatus").textContent = "Uploading...";
-
-  fetch(url, {
-    method: "POST",
-    body: formData
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      document.getElementById("uploadStatus").textContent = "Upload successful!";
-      loadGallery();
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const fileInput = document.getElementById('foodPhoto');
+  const dishName = document.getElementById('dishName').value;
+  const statusEl = document.getElementById('uploadStatus');
+  
+  if (!fileInput.files[0]) {
+    statusEl.textContent = 'Please select a photo first!';
+    statusEl.className = 'text-sm text-center mt-2 text-red-600';
+    return;
+  }
+  
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  
+  statusEl.textContent = 'Uploading...';
+  statusEl.className = 'text-sm text-center mt-2 text-blue-600';
+  
+  reader.onload = function(e) {
+    const imageData = e.target.result.split(',')[1];
+    
+    fetch(galleryApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'uploadFoodPhoto',
+        image: imageData,
+        mimeType: file.type,
+        filename: file.name,
+        dishName: dishName,
+        date: new Date().toISOString().split('T')[0]
+      })
     })
-    .catch((err) => {
-      console.error("Upload failed:", err);
-      document.getElementById("uploadStatus").textContent = "Upload failed.";
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        statusEl.textContent = 'Upload successful!';
+        statusEl.className = 'text-sm text-center mt-2 text-green-600';
+        fileInput.value = '';
+        document.getElementById('fileName').textContent = 'No file selected';
+        document.getElementById('dishName').value = '';
+        loadFoodGallery();
+      } else {
+        throw new Error(data.error || 'Upload failed');
+      }
+    })
+    .catch(error => {
+      console.error('Upload error:', error);
+      statusEl.textContent = 'Error: ' + error.message;
+      statusEl.className = 'text-sm text-center mt-2 text-red-600';
     });
-}
+  };
+  
+  reader.readAsDataURL(file);
+});
 
-function loadGallery() {
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "Loading...";
-
-  fetch(`https://api.cloudinary.com/v1_1/dou6yxpsu/resources/image/upload?prefix=mess-gallery/&max_results=8`, {
-    headers: {
-      Authorization: "Basic " + btoa("dou6yxpsu" + ":") // no API secret needed
-    }
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      gallery.innerHTML = "";
-      data.resources.forEach((image) => {
-        const img = document.createElement("img");
-        img.src = image.secure_url;
-        img.className = "rounded-lg shadow-md hover:scale-105 transition-transform duration-200";
-        gallery.appendChild(img);
+// Gallery functionality
+function loadFoodGallery() {
+  const galleryEl = document.getElementById('foodGallery');
+  
+  galleryEl.innerHTML = `
+    <div class="text-center py-8 col-span-full">
+      <div class="loading mx-auto mb-4"></div>
+      <p class="text-gray-600">Loading food gallery...</p>
+    </div>
+  `;
+  
+  fetch(`${galleryApiUrl}?action=getFoodPhotos`)
+    .then(response => response.json())
+    .then(photos => {
+      if (photos.length === 0) {
+        galleryEl.innerHTML = `
+          <div class="col-span-full text-center py-8">
+            <p class="text-gray-600">No photos yet. Be the first to upload!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      galleryEl.innerHTML = '';
+      
+      photos.forEach(photo => {
+        const photoCard = document.createElement('div');
+        photoCard.className = 'menu-card rounded-xl overflow-hidden hover:shadow-lg transition-shadow';
+        photoCard.innerHTML = `
+          <img src="${photo.url}" alt="${photo.dishName}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-800 dark:text-white truncate">${photo.dishName}</h3>
+            <p class="text-xs text-gray-500 mt-1">Uploaded by ${photo.uploader}</p>
+            <p class="text-xs text-gray-400 mt-1">${new Date(photo.date).toLocaleDateString('en-IN')}</p>
+          </div>
+        `;
+        galleryEl.appendChild(photoCard);
       });
     })
-    .catch(() => {
-      gallery.innerHTML = "<p class='text-sm text-red-600'>Failed to load gallery.</p>";
+    .catch(error => {
+      console.error('Gallery load error:', error);
+      galleryEl.innerHTML = `
+        <div class="col-span-full text-center py-8">
+          <p class="text-red-600">Failed to load gallery. Please try again later.</p>
+        </div>
+      `;
     });
 }
 
+// Initialize gallery on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadFoodGallery();
+});
