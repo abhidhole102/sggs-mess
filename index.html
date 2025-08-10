@@ -390,13 +390,37 @@
     © 2025 SGGS Hostel Mess | Designed by Mess Committee
   </div>
 </footer>
+
 <!-- Upload Section -->
 <section class="bg-green-50 dark:bg-green-900 py-10">
-  <div class="max-w-md mx-auto text-center">
-    <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">📤 Upload Your Mess Food Photo</h2>
-    <input type="file" id="fileInput" accept="image/*" class="mb-4 block w-full border rounded px-2 py-1">
-    <button onclick="uploadImage()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Upload</button>
-    <p id="uploadStatus" class="text-sm mt-3 text-gray-700 dark:text-gray-300"></p>
+  <div class="max-w-md mx-auto px-4">
+    <div class="menu-card rounded-2xl p-6">
+      <h2 class="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">📤 Share Your Food Photo</h2>
+      <form id="uploadForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Photo</label>
+          <div class="flex items-center">
+            <input type="file" id="foodPhoto" accept="image/*" class="hidden">
+            <label for="foodPhoto" class="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+              Choose File
+            </label>
+            <span id="fileName" class="ml-3 text-sm text-gray-600 dark:text-gray-400">No file selected</span>
+          </div>
+        </div>
+        
+        <div>
+          <label for="dishName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dish Name (Optional)</label>
+          <input type="text" id="dishName" placeholder="e.g. Dal Tadka, Paneer Butter Masala" 
+                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+          Upload Photo
+        </button>
+        
+        <p id="uploadStatus" class="text-sm text-center mt-2"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -404,7 +428,13 @@
 <section class="bg-white dark:bg-gray-950 py-10">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">🍽️ Food Gallery</h2>
-    <div id="gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    <div id="foodGallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Photos will be loaded here -->
+      <div class="text-center py-8">
+        <div class="loading mx-auto mb-4"></div>
+        <p class="text-gray-600">Loading food gallery...</p>
+      </div>
+    </div>
   </div>
 </section>
 
